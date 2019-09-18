@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
+    [Table("TUsers")]
     public class User
     {
         public int Id { get; set; }
@@ -13,7 +15,7 @@ namespace Domain.Entity
         //登录名
         public string UserName { get; set; }
 
-        public int CreateUserId { get; set; } = 0;
+        public int CreatorUserId { get; set; } = 0;
 
         public DateTime CreationTime { get; set; } = DateTime.Now;
         //租户Id

@@ -22,7 +22,7 @@ namespace Project.Domain.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        TEntity GetById(Guid id);
+        TEntity GetById(int id);
         /// <summary>
         /// 获取列表
         /// </summary>

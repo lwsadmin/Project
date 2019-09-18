@@ -1,4 +1,5 @@
 ﻿using Project.Domain.Interface;
+using Project.Infrastructure.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,15 @@ namespace Project.Infrastructure.Repository
     /// <typeparam name="TEntity"></typeparam>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
+        private EFContext _dbContext;
+        private Microsoft.EntityFrameworkCore.DbSet<TEntity> _dbSet;
+
+        public Repository(EFContext dbContext)
+        {
+            this._dbContext = dbContext;
+            this._dbSet = dbContext.Set<TEntity>();
+        }
+
         public void Add(TEntity entity)
         {
             throw new NotImplementedException();
@@ -27,9 +37,9 @@ namespace Project.Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        public TEntity GetById(Guid id)
+        public TEntity GetById(int id)
         {
-            throw new NotImplementedException();
+            return _dbSet.Find(id);
         }
 
         public void Remove(Guid id)

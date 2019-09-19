@@ -9,3 +9,4 @@
 *.ide-wal
 *.props
 *.targets
+.vs/Project/DesignTimeBuild/.dtbcache

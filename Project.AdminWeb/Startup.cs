@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Project.Application.AppService;
+using Project.Application.IAppService;
 using Project.Infrastructure.EntityFrameworkCore;
 
 namespace Project.AdminWeb
@@ -33,8 +35,8 @@ namespace Project.AdminWeb
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //系统自动加入依赖注入，目前不使用这个方式
-            //services.AddDbContext<EFContext>(options => options.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;"));
+            //services.AddDbContext<EFContext>(options => options.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;"));、     
+            services.AddTransient<IUserAppService, UserAppService>();
 
         }
 

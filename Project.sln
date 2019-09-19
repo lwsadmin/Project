@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebUI", "WebUI", "{7C0A16CC-2AAE-400B-BFDB-5DEC1C9868FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{94D7B3B4-8ED7-412C-B6C6-D4B47795F1B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Domain", "Project.Domain\Project.Domain.csproj", "{94D7B3B4-8ED7-412C-B6C6-D4B47795F1B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{182D0DFD-7955-4281-8780-006643F55ED1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Infrastructure", "Project.Infrastructure\Project.Infrastructure.csproj", "{182D0DFD-7955-4281-8780-006643F55ED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Application", "Project.Application\Project.Application.csproj", "{A5305A6D-B3A3-4AF8-ABCA-67F8E5F3AE4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Application", "Project.Application\Project.Application.csproj", "{A5305A6D-B3A3-4AF8-ABCA-67F8E5F3AE4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.AdminWeb", "Project.AdminWeb\Project.AdminWeb.csproj", "{71216AA0-0970-428A-88EF-3383BD5263A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AdminWeb", "Project.AdminWeb\Project.AdminWeb.csproj", "{71216AA0-0970-428A-88EF-3383BD5263A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

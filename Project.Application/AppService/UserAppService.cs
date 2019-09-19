@@ -1,8 +1,11 @@
 ﻿using Domain.Entity;
 using Project.Application.IAppService;
+using Project.Infrastructure.EntityFrameworkCore;
 using Project.Infrastructure.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,7 +30,12 @@ namespace Project.Application.AppService
 
         public async Task<User> GetByIdAsync(int Id)
         {
-            return _unitOfWork.UserRepository.GetById(Id);
+            return await _unitOfWork.UserRepository.GetById(Id);
+        }
+
+        public IQueryable<T> GetFields<T>(Expression<Func<User, T>> selector, Expression<Func<User, bool>> predicate)
+        {
+            return _unitOfWork.UserRepository.GetFields(selector, predicate);
         }
     }
 }

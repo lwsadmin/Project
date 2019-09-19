@@ -3,7 +3,9 @@ using Project.Infrastructure.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Project.Infrastructure.Repository
 {
@@ -13,18 +15,16 @@ namespace Project.Infrastructure.Repository
     /// <typeparam name="TEntity"></typeparam>
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private EFContext _dbContext;
         private Microsoft.EntityFrameworkCore.DbSet<TEntity> _dbSet;
 
         public Repository(EFContext dbContext)
         {
-            this._dbContext = dbContext;
             this._dbSet = dbContext.Set<TEntity>();
         }
 
-        public void Add(TEntity entity)
+        public async void Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
         }
 
         public void Dispose()
@@ -32,29 +32,25 @@ namespace Project.Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        public IQueryable<TEntity> GetAll()
+        public IQueryable<T> GetFields<T>(Expression<Func<TEntity, T>> selector, Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _dbSet.Where(predicate).Select(selector);
         }
 
-        public TEntity GetById(int id)
+        public async Task<TEntity> GetById(int id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public void Remove(Guid id)
+        public void Remove(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public int SaveChanges()
-        {
-            throw new NotImplementedException();
+            var n = GetById(id);
+            _dbSet.Remove(n.Result);
         }
 
         public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
         }
     }
 }

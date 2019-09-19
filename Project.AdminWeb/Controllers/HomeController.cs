@@ -13,13 +13,16 @@ namespace Project.AdminWeb.Controllers
     public class HomeController : Controller
     {
         private readonly IUserAppService _userAppService;
-        public HomeController()
+        public HomeController(IUserAppService userAppService)
         {
-            _userAppService = new UserAppService();
+            _userAppService = userAppService;
         }
         public IActionResult Index()
         {
             ViewBag.User = _userAppService.GetByIdAsync(3).Result;
+
+            //var list= _userAppService.
+
             return View();
         }
 

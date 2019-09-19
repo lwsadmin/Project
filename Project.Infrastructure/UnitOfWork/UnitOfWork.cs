@@ -6,6 +6,7 @@ using Project.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Project.Infrastructure.UnitOfWork
 {
@@ -13,12 +14,13 @@ namespace Project.Infrastructure.UnitOfWork
     {
         private bool disposed = false;
         private EFContext _dbContext;
-
         private IRepository<Role> _roleRepository;
+        private IRepository<Permissions> _permissionsRepository;
         private IRepository<User> _userRepository;
         public UnitOfWork()
         {
             this._dbContext = new EFContext();
+            //this._dbContext = dbContext;
         }
         public IRepository<Role> RoleRepository
         {
@@ -42,6 +44,39 @@ namespace Project.Infrastructure.UnitOfWork
                 }
                 return _userRepository;
             }
+        }
+
+        public IRepository<Permissions> PermissionsRepository
+        {
+            get
+            {
+                if (this._permissionsRepository == null)
+                {
+                    this._permissionsRepository = new Repository<Permissions>(_dbContext);
+                }
+                return _permissionsRepository;
+            }
+        }
+        public async Task<int> ExecuteSqlCommand(string sql, params object[] parameters)
+        {
+            return await _dbContext.Database.ExecuteSqlCommandAsync(sql, parameters);
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+        public async void BeiginTran()
+        {
+            await _dbContext.Database.BeginTransactionAsync();
+        }
+        public void CommitTran()
+        {
+            _dbContext.Database.CommitTransaction();
+        }
+        public void RollBackTran()
+        {
+            _dbContext.Database.RollbackTransaction();
         }
 
         protected virtual void Dispose(bool disposing)

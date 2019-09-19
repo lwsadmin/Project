@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Project.Domain.Interface
 {
@@ -22,12 +24,12 @@ namespace Project.Domain.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        TEntity GetById(int id);
+        Task<TEntity> GetById(int id);
         /// <summary>
         /// 获取列表
         /// </summary>
         /// <returns></returns>
-        IQueryable<TEntity> GetAll();
+        IQueryable<T> GetFields<T>(Expression<Func<TEntity, T>> selector, Expression<Func<TEntity, bool>> predicate);
         /// <summary>
         /// 根据对象进行更新
         /// </summary>
@@ -37,11 +39,6 @@ namespace Project.Domain.Interface
         /// 根据id删除
         /// </summary>
         /// <param name="id"></param>
-        void Remove(Guid id);
-        /// <summary>
-        /// 保存
-        /// </summary>
-        /// <returns></returns>
-        int SaveChanges();
+        void Remove(int id);
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Project.Application.AppService
 {
-    public class UserAppService : IUserAppService
+    public class UserAppService :  IUserAppService
     {
         private readonly UnitOfWork _unitOfWork;
         public UserAppService()

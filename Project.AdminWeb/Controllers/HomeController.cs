@@ -19,6 +19,7 @@ namespace Project.AdminWeb.Controllers
         }
         public IActionResult Index()
         {
+           // throw new Exception($"{DateTime.Now}我扔出来一个异常！");
             ViewBag.User = _userAppService.GetByIdAsync(3).Result;
 
             //var list= _userAppService.

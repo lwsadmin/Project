@@ -19,10 +19,15 @@ namespace Project.AdminWeb.Controllers
         }
         public IActionResult Index()
         {
-           // throw new Exception($"{DateTime.Now}我扔出来一个异常！");
+            // throw new Exception($"{DateTime.Now}我扔出来一个异常！");
             ViewBag.User = _userAppService.GetByIdAsync(3).Result;
-
-            //var list= _userAppService.
+            ViewBag.List = _userAppService.GetFields(c => c.Name, c => c.Id > 0);
+            var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id > 0);
+            foreach (var item in userList)
+            {
+                var s = item.Id;
+            }
+            ViewBag.UserList = userList.ToList().Select(s => Tuple.Create(s.Id, s.UserName)); 
 
             return View();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project.Application.IAppService;
@@ -10,6 +11,7 @@ using Project.MobileWeb.Models;
 
 namespace Project.MobileWeb.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,13 +21,13 @@ namespace Project.MobileWeb.Controllers
             _logger = logger;
             _userAppService = userAppService;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             _logger.LogError(".NET Core3.0自带了日志---------------");
             ViewBag.User = _userAppService.GetByIdAsync(3).Result;
-            ViewBag.List = _userAppService.GetFields(c => c.Name, c => c.Id > 0);
-            var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id > 0);
+            ViewBag.List = _userAppService.GetFields(c => c.Name, c => c.Id!="");
+            var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id!="");
             foreach (var item in userList)
             {
                 var s = item.Id;

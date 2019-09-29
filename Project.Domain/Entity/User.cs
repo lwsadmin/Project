@@ -4,16 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Identity;
 namespace Domain.Entity
 {
     [Table("TUsers")]
-    public class User
+    public class ProjectUser : IdentityUser<int>
     {
-        public int Id { get; set; }
-
-        //登录名
-        public string UserName { get; set; }
+        // IdentityUser<Guid>
+        // public override int Id { get; set; }
 
         public int CreatorUserId { get; set; } = 0;
 
@@ -29,8 +29,5 @@ namespace Domain.Entity
         //所属角色 一个管理员 可能同时拥有多个角色
         public string RoleId { get; set; }
 
-        public string PhoneNumber { get; set; }
-
-        public string EmailAddress { get; set; }
     }
 }

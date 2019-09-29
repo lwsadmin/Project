@@ -6,3 +6,16 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<h1>
+    @ViewBag.User.Name
+</h1>
+@foreach (var item in ViewBag.List)
+{
+    <p>@item</p>
+}
+
+@foreach (var item in ViewBag.UserList)
+{
+    <h2>@item.Item1 @item.Item2</h2>
+
+}

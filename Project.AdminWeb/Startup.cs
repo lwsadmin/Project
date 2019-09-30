@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Entity;
 //using Domain.Entity;
 //using Fluent.Infrastructure.FluentModel;
 //using Microsoft.AspNet.Identity.EntityFramework;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Infrastructure.EntityFrameworkCore;
+using Project.Infrastructure.Identity;
 //using Project.Identity.Entity;
 //using Project.Infrastructure.EntityFrameworkCore;
 
@@ -37,7 +39,9 @@ namespace Project.AdminWeb
             services.AddControllersWithViews();
             //services.AddDbContext<EFContext>(options => options.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;"));
             services.AddDbContext<EFContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionStrings")));
-           // services.AddIdentity<Domain.Entity.User, IdentityRole>().AddEntityFrameworkStores<UserDBContext>()
+            //services.AddIdentity<Domain.Entity.User, IdentityRole>().AddEntityFrameworkStores<UserDBContext>()
+
+            services.AddIdentity<ProjectUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Password Strength Setting
             services.Configure<IdentityOptions>(options =>

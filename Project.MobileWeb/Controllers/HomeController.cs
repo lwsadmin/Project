@@ -26,8 +26,8 @@ namespace Project.MobileWeb.Controllers
         {
             _logger.LogError(".NET Core3.0自带了日志---------------");
             ViewBag.User = _userAppService.GetByIdAsync(3).Result;
-            ViewBag.List = _userAppService.GetFields(c => c.Name, c => c.Id!="");
-            var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id!="");
+            ViewBag.List = _userAppService.GetFields(c => c.Name, c => c.Id > 0);
+            var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id > 0);
             foreach (var item in userList)
             {
                 var s = item.Id;

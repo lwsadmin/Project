@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project.Application.IAppService;
+using Project.Common;
 using Project.MobileWeb.Models;
 
 namespace Project.MobileWeb.Controllers
@@ -44,6 +46,25 @@ namespace Project.MobileWeb.Controllers
             }
             return s;
         }
+        [AllowAnonymous]
+        public ActionResult ExportExcel()
+        {
+            ExcelHelp excel = new ExcelHelp();
+            DataTable dt = new DataTable("Test");
+            dt.Columns.Add("姓名", typeof(string));
+            dt.Columns.Add("性别", typeof(string));
+            dt.Columns.Add("电话", typeof(string));
+
+            dt.Rows.Add("李磊", "男", "15898653259");
+            dt.Rows.Add("张执先", "男", "19158974563");
+            dt.Rows.Add("韩志成", "女", "16498653245");
+
+
+            var ms = excel.ExportDataTableToExcel(dt, "MyTest");
+
+            return File(ms.ToArray(), "application/vnd.ms-excel", "导出.xlsx");
+        }
+
         public IActionResult Privacy()
         {
             return View();

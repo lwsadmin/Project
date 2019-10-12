@@ -11,21 +11,32 @@ using System.Threading.Tasks;
 
 namespace Project.Application.AppService
 {
-    public class UserAppService :  IUserAppService
+    public class UserAppService : IUserAppService
     {
         private readonly UnitOfWork _unitOfWork;
         public UserAppService()
         {
             this._unitOfWork = new UnitOfWork();
         }
-        public Task CreateOrEditAsync(User model)
+        public async void CreateOrEditAsync(User model)
         {
-            throw new NotImplementedException();
+            if (model.Id <= 0)
+            {
+                _unitOfWork.UserRepository.Add(model);
+
+            }
+            else
+            {
+                //var s = _unitOfWork.UserRepository.GetById(model.Id).Result;
+                //s.Name = model.Name;
+                _unitOfWork.UserRepository.Update(model);
+            }
+            await _unitOfWork.SaveChanges();
         }
 
-        public Task DeleteAsync(int id)
+        public void DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            _unitOfWork.UserRepository.Remove(id);
         }
 
         public async Task<User> GetByIdAsync(int Id)

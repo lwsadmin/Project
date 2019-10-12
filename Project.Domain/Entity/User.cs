@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,9 @@ namespace Domain.Entity
         public int TenantId { get; set; } = 0;
 
         //姓名
+        [DisplayName("姓名")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "请输入姓名")]
+
         public string Name { get; set; }
 
         public string PassWord { get; set; }

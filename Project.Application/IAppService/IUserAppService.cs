@@ -11,9 +11,9 @@ namespace Project.Application.IAppService
 {
     public interface IUserAppService
     {
-        Task CreateOrEditAsync(User model);
+        void CreateOrEditAsync(User model);
         Task<User> GetByIdAsync(int Id);
-        Task DeleteAsync(int id);
+        void DeleteAsync(int id);
 
         IQueryable<T> GetFields<T>(Expression<Func<User, T>> selector, Expression<Func<User, bool>> predicate);
     }

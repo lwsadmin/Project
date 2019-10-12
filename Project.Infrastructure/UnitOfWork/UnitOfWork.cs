@@ -17,6 +17,7 @@ namespace Project.Infrastructure.UnitOfWork
         private IRepository<Role> _roleRepository;
         private IRepository<Permissions> _permissionsRepository;
         private IRepository<User> _userRepository;
+
         public UnitOfWork()
         {
             this._dbContext = new EFContext();

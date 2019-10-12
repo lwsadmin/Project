@@ -20,5 +20,10 @@ namespace Project.Infrastructure.Identity
         }
         public System.Data.Entity.DbSet<ProjectUser> ProjectUsers { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);  
+        }
     }
 }

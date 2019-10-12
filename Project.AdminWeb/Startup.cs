@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Domain.Entity;
 //using Domain.Entity;
@@ -13,14 +14,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.Infrastructure.EntityFrameworkCore;
 using Project.Infrastructure.Identity;
-//using Project.Identity.Entity;
-//using Project.Infrastructure.EntityFrameworkCore;
 
 namespace Project.AdminWeb
 {
@@ -37,49 +36,49 @@ namespace Project.AdminWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //services.AddDbContext<EFContext>(options => options.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;"));
-            services.AddDbContext<EFContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionStrings")));
-            //services.AddIdentity<Domain.Entity.User, IdentityRole>().AddEntityFrameworkStores<UserDBContext>()
-
+            services.AddEntityFrameworkSqlServer().AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings"]));
+            //services.AddDbContext<EFContext>(options => options.UseSqlServer(Configuration["ConnectionStrings"]));
             services.AddIdentity<ProjectUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            SetDepend("Project.Application", services);
+            // services.AddIdentity<ProjectUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Password Strength Setting
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 8;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 6;
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // Password settings
+            //    options.Password.RequireDigit = true;
+            //    options.Password.RequiredLength = 8;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = true;
+            //    options.Password.RequireLowercase = false;
+            //    options.Password.RequiredUniqueChars = 6;
 
-                // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.AllowedForNewUsers = true;
+            //    // Lockout settings
+            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            //    options.Lockout.MaxFailedAccessAttempts = 10;
+            //    options.Lockout.AllowedForNewUsers = true;
 
-                // User settings
-                options.User.RequireUniqueEmail = true;
-            });
+            //    // User settings
+            //    options.User.RequireUniqueEmail = true;
+            //});
 
             //Setting the Account Login page
-            services.ConfigureApplicationCookie(options =>
-            {
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.LoginPath = "/Account/Login"; // If the LoginPath is not set here,
-                                                      // ASP.NET Core will default to /Account/Login
-                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here,
-                                                        // ASP.NET Core will default to /Account/Logout
-                options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is
-                                                                    // not set here, ASP.NET Core
-                                                                    // will default to
-                                                                    // /Account/AccessDenied
-                options.SlidingExpiration = true;
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    // Cookie settings
+            //    options.Cookie.HttpOnly = true;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            //    options.LoginPath = "/Account/Login"; // If the LoginPath is not set here,
+            //                                          // ASP.NET Core will default to /Account/Login
+            //    options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here,
+            //                                            // ASP.NET Core will default to /Account/Logout
+            //    options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is
+            //                                                        // not set here, ASP.NET Core
+            //                                                        // will default to
+            //                                                        // /Account/AccessDenied
+            //    options.SlidingExpiration = true;
 
-            });
+            //});
         }
 
         // 此方法由运行时调用。使用此方法配置http请求管道。
@@ -99,7 +98,7 @@ namespace Project.AdminWeb
                         if (ex != null)
                         {
                             //记录异常日志
-                            var path = $"d:\\{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
+                            var path = $"c:\\{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
                             System.IO.StreamWriter sw = new System.IO.StreamWriter(path, true);
                             sw.WriteLine(ex.Error.Message);
                             sw.WriteLine(ex.Error.StackTrace);
@@ -117,6 +116,7 @@ namespace Project.AdminWeb
             app.UseStaticFiles();//静态资源
             app.UseRouting();//注入路由
             app.UseAuthorization();//身份认证，必须在UseEndpoints之前
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -125,5 +125,21 @@ namespace Project.AdminWeb
             });//注入端点 默认路由表
         }
 
+        private void SetDepend(string assemblyName, IServiceCollection services)
+        {
+            if (!string.IsNullOrWhiteSpace(assemblyName))
+            {
+                Assembly assembly = Assembly.Load(assemblyName);
+                List<Type> classList = assembly.GetTypes().Where(c => c.IsClass).ToList();
+                foreach (var item in classList)
+                {
+                    var interfaceTypeArray = item.GetInterfaces();
+                    if (interfaceTypeArray.Length > 0)
+                    {
+                        services.AddTransient(interfaceTypeArray[0], item);
+                    }
+                }
+            }
+        }
     }
 }

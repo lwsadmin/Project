@@ -14,7 +14,7 @@ namespace Project.Infrastructure.EntityFrameworkCore
         public DbSet<User> User { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;");
+           optionsBuilder.UseSqlServer("Server=.;Database=Project;User=sa;Password=123456;");
         }
 
         public EFContext() {}

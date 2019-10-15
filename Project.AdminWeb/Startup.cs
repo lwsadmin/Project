@@ -13,13 +13,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Project.Infrastructure.EntityFrameworkCore;
-using Project.Infrastructure.Identity;
+using Service;
+using IService;
+using Project.Domain.IUnitOfWork;
+using Project.Infrastructure.UnitOfWork;
+using SqlSugar;
 
 namespace Project.AdminWeb
 {
@@ -36,49 +37,20 @@ namespace Project.AdminWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddEntityFrameworkSqlServer().AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings"]));
-            //services.AddDbContext<EFContext>(options => options.UseSqlServer(Configuration["ConnectionStrings"]));
-            services.AddIdentity<ProjectUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-            SetDepend("Project.Application", services);
-            // services.AddIdentity<ProjectUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //Password Strength Setting
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    // Password settings
-            //    options.Password.RequireDigit = true;
-            //    options.Password.RequiredLength = 8;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = true;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequiredUniqueChars = 6;
-
-            //    // Lockout settings
-            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            //    options.Lockout.MaxFailedAccessAttempts = 10;
-            //    options.Lockout.AllowedForNewUsers = true;
-
-            //    // User settings
-            //    options.User.RequireUniqueEmail = true;
-            //});
-
-            //Setting the Account Login page
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    // Cookie settings
-            //    options.Cookie.HttpOnly = true;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-            //    options.LoginPath = "/Account/Login"; // If the LoginPath is not set here,
-            //                                          // ASP.NET Core will default to /Account/Login
-            //    options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here,
-            //                                            // ASP.NET Core will default to /Account/Logout
-            //    options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is
-            //                                                        // not set here, ASP.NET Core
-            //                                                        // will default to
-            //                                                        // /Account/AccessDenied
-            //    options.SlidingExpiration = true;
-
-            //});
+   
+            services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
+            // services.AddTransient(typeof(IUserAppService), typeof(UserAppService));
+            SetDepend("Service", services);
+            services.AddScoped<SqlSugar.ISqlSugarClient>(o =>
+            {
+                return new SqlSugar.SqlSugarClient(new SqlSugar.ConnectionConfig()
+                {
+                    ConnectionString = Configuration["ConnectionStrings"],
+                    DbType = DbType.SqlServer,
+                    InitKeyType = InitKeyType.Attribute,//从特性读取主键和自增列信息
+                    IsAutoCloseConnection = true,//开启自动释放模式和EF原理一样
+                });
+            });
         }
 
         // 此方法由运行时调用。使用此方法配置http请求管道。
@@ -116,7 +88,6 @@ namespace Project.AdminWeb
             app.UseStaticFiles();//静态资源
             app.UseRouting();//注入路由
             app.UseAuthorization();//身份认证，必须在UseEndpoints之前
-            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -133,10 +104,11 @@ namespace Project.AdminWeb
                 List<Type> classList = assembly.GetTypes().Where(c => c.IsClass).ToList();
                 foreach (var item in classList)
                 {
-                    var interfaceTypeArray = item.GetInterfaces();
-                    if (interfaceTypeArray.Length > 0)
+                    var interfaceTypeArray = item.GetInterfaces().Where(c=>c.FullName.Contains("IService")).ToList();
+                    if (interfaceTypeArray.Count > 0)
                     {
-                        services.AddTransient(interfaceTypeArray[0], item);
+                        var inter= interfaceTypeArray[0];
+                        services.AddTransient(inter, item);
                     }
                 }
             }

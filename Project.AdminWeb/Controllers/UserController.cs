@@ -6,34 +6,35 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Project.Application.IAppService;
 using Domain.Entity;
 using Project.Common;
 using System.Data;
-
+using IService;
+using Service;
 namespace Project.AdminWeb.Controllers
 {
-
-    [Authorize]
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserAppService _userAppService;
-        public UserController(ILogger<UserController> logger, IUserAppService userAppService)
+        private readonly IRoleApp _roleAppService;
+        public UserController(ILogger<UserController> logger, IUserAppService userAppService, IRoleApp roleAppService)
         {
             _logger = logger;
             _userAppService = userAppService;
+            _roleAppService = roleAppService;
         }
         // GET: User
- 
+
         public ActionResult List()
         {
             try
             {
-                ViewBag.User = _userAppService.GetByIdAsync(3).Result;
-                var userList = _userAppService.GetFields(c => new { c.Id, c.UserName }, c => c.Id > 0).ToList();
-                ViewBag.List = userList.ToList().Select(s => Tuple.Create(s.Id, s.UserName));
-
+                //UserAppService s = new UserAppService();
+                ViewBag.User = _userAppService.GetById(3).Result;
+                //var userList = s.GetFields(c => new { c.Id, c.UserName }, c => c.Id > 0).ToList();
+                // ViewBag.List = userList.ToList().Select(s => Tuple.Create(s.Id, s.UserName));
+                ViewBag.Role = _roleAppService.GetById(3).Result;
                 return View();
             }
             catch (Exception ex)
@@ -54,11 +55,11 @@ namespace Project.AdminWeb.Controllers
         public ActionResult Create(int? id)
         {
             var user = new User();
-            if (id is null)
-            {
-                return View(user);
-            }
-            user = _userAppService.GetByIdAsync((int)id).Result;
+            //if (id is null)
+            //{
+            //    return View(user);
+            //}
+            //user = _userAppService.GetByIdAsync((int)id).Result;
             return View(user);
         }
 
@@ -72,7 +73,7 @@ namespace Project.AdminWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _userAppService.CreateOrEditAsync(user);
+                    // _userAppService.CreateOrEdit(user);
                     return RedirectToAction("List");
                 }
                 return Content("验证");

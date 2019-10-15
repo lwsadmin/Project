@@ -1,5 +1,9 @@
-﻿using Project.Domain.Interface;
-using Project.Infrastructure.EntityFrameworkCore;
+﻿
+using java.rmi.server;
+using Project.Domain.IRepository;
+using Project.Domain.IUnitOfWork;
+using Project.Infrastructure.SqlSugar;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,44 +17,60 @@ namespace Project.Infrastructure.Repository
     /// 泛型仓储，实现泛型仓储接口
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IDisposable where TEntity : class,new()
     {
-        private Microsoft.EntityFrameworkCore.DbSet<TEntity> _dbSet;
+        //private SqlContext<TEntity> _sqlContext;
+        private ISqlSugarClient _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public Repository(EFContext dbContext)
+        //public Repository()
+        //{
+        //    this._sqlContext = new SqlContext<TEntity>();
+        //}
+        public Repository(IUnitOfWork unitOfWork)
         {
-            this._dbSet = dbContext.Set<TEntity>();
+            _unitOfWork = unitOfWork;
+            _db = unitOfWork.GetDbClient();
+            // DbContext.Init(BaseDBConfig.ConnectionString, (DbType)BaseDBConfig.DbType);
         }
 
-        public async void Add(TEntity entity)
-        {
-            await _dbSet.AddAsync(entity);
-        }
 
         public void Dispose()
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<T> GetFields<T>(Expression<Func<TEntity, T>> selector, Expression<Func<TEntity, bool>> predicate)
+        public async Task<int> AddAsync(TEntity obj)
         {
-            return _dbSet.Where(predicate).Select(selector);
+            var insert = _db.Insertable(obj);
+            return await insert.ExecuteReturnIdentityAsync();
         }
 
         public async Task<TEntity> GetById(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _db.Queryable<TEntity>().In(id).SingleAsync();
         }
 
-        public void Remove(int id)
+        public ISugarQueryable<T> GetFields<T>(Expression<Func<TEntity, T>> selector, Expression<Func<TEntity, bool>> predicate)
         {
-            var n = GetById(id);
-            _dbSet.Remove(n.Result);
+            throw new NotImplementedException();
         }
 
-        public void Update(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity obj)
         {
-            _dbSet.Update(entity);
+            ////这种方式会以主键为条件
+            //var i = await Task.Run(() => _db.Updateable(entity).ExecuteCommand());
+            //return i > 0;
+            //这种方式会以主键为条件
+            return await _db.Updateable(obj).ExecuteCommandHasChangeAsync();
+        }
+
+        public async Task<bool> RemoveAsync(int id)
+        {
+            //var i = await Task.Run(() => _db.Deleteable(entity).ExecuteCommand());
+            //return i > 0;
+            // await _db.Deleteable(entity).ExecuteCommandHasChangeAsync();
+            return await _db.Deleteable<TEntity>(id).ExecuteCommandHasChangeAsync();
         }
     }
 }

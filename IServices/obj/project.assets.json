@@ -1,0 +1,135 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "sqlSugar/5.0.0.10": {
+        "type": "package",
+        "compile": {
+          "lib/SqlSugar.dll": {}
+        },
+        "runtime": {
+          "lib/SqlSugar.dll": {}
+        }
+      },
+      "Project.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "dependencies": {
+          "SqlSugar": "5.0.0.10"
+        },
+        "compile": {
+          "bin/placeholder/Project.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Project.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "sqlSugar/5.0.0.10": {
+      "sha512": "LVwUoP8Ilttqwr6qG7bw4qvSzHjw9MC08KPM/MmaC9TxdpHuLrH/a1j+XleFRRYFWIvgJmNsAPeeDmdGdoGH2A==",
+      "type": "package",
+      "path": "sqlsugar/5.0.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/SqlSugar.dll",
+        "sqlsugar.5.0.0.10.nupkg.sha512",
+        "sqlsugar.nuspec"
+      ]
+    },
+    "Project.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Project.Domain/Project.Domain.csproj",
+      "msbuildProject": "../Project.Domain/Project.Domain.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.0": [
+      "Project.Domain >= 1.0.0",
+      "SqlSugar >= 5.0.0.10"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "G:\\工作文件\\Project\\IServices\\IService.csproj",
+      "projectName": "IService",
+      "projectPath": "G:\\工作文件\\Project\\IServices\\IService.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "G:\\工作文件\\Project\\IServices\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "projectReferences": {
+            "G:\\工作文件\\Project\\Project.Domain\\Project.Domain.csproj": {
+              "projectPath": "G:\\工作文件\\Project\\Project.Domain\\Project.Domain.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.0": {
+        "dependencies": {
+          "SqlSugar": {
+            "target": "Package",
+            "version": "[5.0.0.10, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.0”还原包“sqlSugar 5.0.0.10”。此包可能与项目不完全兼容。",
+      "libraryId": "sqlSugar",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.0"
+      ]
+    }
+  ]
+}

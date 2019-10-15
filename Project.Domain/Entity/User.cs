@@ -6,16 +6,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Identity;
+
+using SqlSugar;
 namespace Domain.Entity
 {
-    [Table("TUsers")]
-    public class User : IdentityUser<int>
+    [SugarTable("TUsers")]
+    public class User
     {
         // IdentityUser<Guid>
-        // public override int Id { get; set; }
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        public  int Id { get; set; }
 
         public int CreatorUserId { get; set; } = 0;
 
@@ -28,6 +28,13 @@ namespace Domain.Entity
         [Required(AllowEmptyStrings = false, ErrorMessage = "请输入姓名")]
 
         public string Name { get; set; }
+
+        public string UserName { get; set; }
+
+
+        public string PhoneNumber { get; set; }
+
+        public string Email { get; set; }
 
         public string PassWord { get; set; }
 

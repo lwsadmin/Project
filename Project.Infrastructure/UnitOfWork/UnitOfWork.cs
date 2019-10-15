@@ -1,83 +1,52 @@
 ﻿using Domain.Entity;
-using Microsoft.EntityFrameworkCore;
-using Project.Domain.Interface;
-using Project.Infrastructure.EntityFrameworkCore;
+using Project.Infrastructure.SqlSugar;
 using Project.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Project.Domain.IRepository;
+using Project.Domain.IUnitOfWork;
+using SqlSugar;
 
 namespace Project.Infrastructure.UnitOfWork
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private bool disposed = false;
-        private EFContext _dbContext;
-        private IRepository<Role> _roleRepository;
-        private IRepository<Permissions> _permissionsRepository;
-        private IRepository<User> _userRepository;
-
-        public UnitOfWork()
+        private readonly ISqlSugarClient _sqlSugarClient;
+        // 注入 sugar client 实例
+        public UnitOfWork(ISqlSugarClient sqlSugarClient)
         {
-            this._dbContext = new EFContext();
-            //this._dbContext = dbContext;
+            _sqlSugarClient = sqlSugarClient;
         }
-        public IRepository<Role> RoleRepository
+        // 保证每次 scope 访问，多个仓储类，都用一个 client 实例,注意，不是单例模型
+        public ISqlSugarClient GetDbClient()
         {
-            get
-            {
-                if (this._roleRepository == null)
-                {
-                    this._roleRepository = new Repository<Role>(_dbContext);
-                }
-                return _roleRepository;
-            }
+            return _sqlSugarClient;
         }
 
-        public IRepository<User> UserRepository
+        public void BeginTran()
         {
-            get
-            {
-                if (this._userRepository == null)
-                {
-                    this._userRepository = new Repository<User>(_dbContext);
-                }
-                return _userRepository;
-            }
+            GetDbClient().Ado.BeginTran();
         }
 
-        public IRepository<Permissions> PermissionsRepository
-        {
-            get
-            {
-                if (this._permissionsRepository == null)
-                {
-                    this._permissionsRepository = new Repository<Permissions>(_dbContext);
-                }
-                return _permissionsRepository;
-            }
-        }
-        public async Task<int> ExecuteSqlCommand(string sql, params object[] parameters)
-        {
-            return await _dbContext.Database.ExecuteSqlCommandAsync(sql, parameters);
-        }
-
-        public async Task<int> SaveChanges()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
-        public async void BeiginTran()
-        {
-            await _dbContext.Database.BeginTransactionAsync();
-        }
         public void CommitTran()
         {
-            _dbContext.Database.CommitTransaction();
+            try
+            {
+                GetDbClient().Ado.CommitTran();
+            }
+            catch (Exception ex)
+            {
+
+                GetDbClient().Ado.RollbackTran();
+            }
         }
-        public void RollBackTran()
+
+        public void RollbackTran()
         {
-            _dbContext.Database.RollbackTransaction();
+            GetDbClient().Ado.RollbackTran();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -86,7 +55,7 @@ namespace Project.Infrastructure.UnitOfWork
             {
                 if (disposing)
                 {
-                    _dbContext.Dispose();
+                    _sqlSugarClient.Dispose();
                 }
             }
             this.disposed = true;

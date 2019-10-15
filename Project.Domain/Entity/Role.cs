@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,15 @@ namespace Domain.Entity
     /// <summary>
     /// 角色表
     /// </summary>
+    [SugarTable("TRoles")]
     public class Role
     {
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
 
         public string DisplayName { get; set; }
 
-        public int CreateUserId { get; set; } = 0;
+        public int CreatorUserId { get; set; } = 0;
 
         public bool IsDefault { get; set; } = false;
 

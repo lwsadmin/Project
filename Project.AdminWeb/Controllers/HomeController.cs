@@ -7,11 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project.AdminWeb.Models;
-
+using Service;
 namespace Project.AdminWeb.Controllers
 {
 
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -23,6 +22,7 @@ namespace Project.AdminWeb.Controllers
 
         public IActionResult Index()
         {
+         
             return View();
         }
 

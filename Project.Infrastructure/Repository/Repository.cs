@@ -17,7 +17,7 @@ namespace Project.Infrastructure.Repository
     /// 泛型仓储，实现泛型仓储接口
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class Repository<TEntity> : IDisposable where TEntity : class,new()
+    public class Repository<TEntity> : IDisposable where TEntity : class, new()
     {
         //private SqlContext<TEntity> _sqlContext;
         private ISqlSugarClient _db;
@@ -48,6 +48,7 @@ namespace Project.Infrastructure.Repository
 
         public async Task<TEntity> GetById(int id)
         {
+            System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>("select * from  TUsers").ToDataTable();//.ToPageList(1, 2);
             return await _db.Queryable<TEntity>().In(id).SingleAsync();
         }
 
@@ -70,6 +71,7 @@ namespace Project.Infrastructure.Repository
             //var i = await Task.Run(() => _db.Deleteable(entity).ExecuteCommand());
             //return i > 0;
             // await _db.Deleteable(entity).ExecuteCommandHasChangeAsync();
+
             return await _db.Deleteable<TEntity>(id).ExecuteCommandHasChangeAsync();
         }
     }

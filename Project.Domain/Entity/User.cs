@@ -6,22 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Project.Domain.Base;
 using SqlSugar;
 namespace Domain.Entity
 {
     [SugarTable("TUsers")]
-    public class User
+    public class User : BaseEntity
     {
-        // IdentityUser<Guid>
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-        public  int Id { get; set; }
-
         public int CreatorUserId { get; set; } = 0;
-
-        public DateTime CreationTime { get; set; } = DateTime.Now;
-        //租户Id
-        public int TenantId { get; set; } = 0;
 
         //姓名
         [DisplayName("姓名")]

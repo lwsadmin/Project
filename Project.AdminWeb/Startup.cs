@@ -37,7 +37,7 @@ namespace Project.AdminWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-   
+
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
             // services.AddTransient(typeof(IUserAppService), typeof(UserAppService));
             SetDepend("Service", services);
@@ -92,8 +92,16 @@ namespace Project.AdminWeb
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area=member}/{controller=member}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+    name: "defaultWithArea",
+    pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
             });//注入端点 默认路由表
+
+            //        routes.MapRoute(
+            //name: "defaultWithArea",
+            //template: "{area}/{controller=Main}/{action=Index}/{id?}");
         }
 
         private void SetDepend(string assemblyName, IServiceCollection services)
@@ -104,10 +112,10 @@ namespace Project.AdminWeb
                 List<Type> classList = assembly.GetTypes().Where(c => c.IsClass).ToList();
                 foreach (var item in classList)
                 {
-                    var interfaceTypeArray = item.GetInterfaces().Where(c=>c.FullName.Contains("IService")).ToList();
+                    var interfaceTypeArray = item.GetInterfaces().Where(c => c.FullName.Contains("IService")).ToList();
                     if (interfaceTypeArray.Count > 0)
                     {
-                        var inter= interfaceTypeArray[0];
+                        var inter = interfaceTypeArray[0];
                         services.AddTransient(inter, item);
                     }
                 }

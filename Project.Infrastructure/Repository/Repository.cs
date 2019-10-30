@@ -48,7 +48,7 @@ namespace Project.Infrastructure.Repository
 
         public async Task<TEntity> GetById(int id)
         {
-            System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>("select * from  TUsers").ToDataTable();//.ToPageList(1, 2);
+
             return await _db.Queryable<TEntity>().In(id).SingleAsync();
         }
 
@@ -73,6 +73,14 @@ namespace Project.Infrastructure.Repository
             // await _db.Deleteable(entity).ExecuteCommandHasChangeAsync();
 
             return await _db.Deleteable<TEntity>(id).ExecuteCommandHasChangeAsync();
+        }
+
+        public async Task<System.Data.DataTable> GetDataTableAsync(string sql)
+        {
+            System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
+
+
+            return t;
         }
     }
 }

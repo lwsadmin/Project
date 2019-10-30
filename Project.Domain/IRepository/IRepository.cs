@@ -41,5 +41,7 @@ namespace Project.Domain.IRepository
         /// </summary>
         /// <param name="id"></param>
         Task<bool> RemoveAsync(int id);
+
+        Task<System.Data.DataTable> GetDataTableAsync(string sql);
     }
 }

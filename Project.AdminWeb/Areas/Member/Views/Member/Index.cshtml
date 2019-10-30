@@ -1,0 +1,74 @@
+﻿@using System.Data
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model PagedList<DataRow>
+    // DataTable
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+
+                    <div class="layui-card-body layui-table-body layui-table-main">
+                        <table class="layui-table layui-form">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" lay-filter="checkall" name="" lay-skin="primary"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon layui-icon-ok"></i></div>
+                                    </th>
+                                    <th>头像</th>
+                                    <th>姓名</th>
+                                    <th>性别</th>
+                                    <th>电话</th>
+                                    <th>邮箱</th>
+                                    <th>积分</th>
+                                    <th>注册时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (DataRow item in Model)
+                          {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="id" value="1" lay-skin="primary"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon layui-icon-ok"></i></div>
+                                    </td>
+                                    <td><img style="width:2rem;" src="@item["HeadImg"]" /></td>
+                                    <td>@item["fullName"]</td>
+                                    <td>@item["Sex"]</td>
+                                    <td>@item["Mobile"]</td>
+                                    <td>@item["Email"]</td>
+                                    <td>@item["Integral"]</td>
+                                    <td>@item["RegTime"]</td>
+                                </tr>
+                            }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+                    new PagedListRenderOptions {
+                    MaximumPageNumbersToDisplay = 10,
+                    DisplayPageCountAndCurrentLocation = true,
+                    LinkToFirstPageFormat = "首页",
+                    LinkToLastPageFormat = "尾页",
+                    LinkToNextPageFormat = "下一页",
+                    PageCountAndCurrentLocationFormat = "{1}页{2}条记录",
+                    LinkToPreviousPageFormat = "上一页",
+                    UlElementClasses = new[] { "pagination col-md-8" },
+                    ContainerDivClasses = new[] { "row" } },
+                    new AjaxOptions()
+                    {
+                    DataForm = "searchForm",
+                    HttpMethod = "GET",
+                    UpdateTargetId = "table"
+                    }
+                    ))
+                </div>
+            </div>
+        </div>
+    </div>
+
+

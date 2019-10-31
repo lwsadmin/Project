@@ -23,13 +23,16 @@ namespace Project.AdminWeb.Areas.Member.Controllers
 
         public IActionResult Index(int page = 1, int pageSize = 10)
         {
+
+       
             string sql = @$"SELECT Id,fullName,HeadImg,Mobile,case Sex
 when 1 then '男'
 else '女'
 end Sex,RegTime,Integral,Email
 FROM TMember ORDER BY id offset {(page - 1) * 10} rows FETCH next {pageSize} rows ONLY";
             var table = _userAppService.GetDataTableAsync(sql).Result;
-            int total = 0;
+            int total = (int)_userAppService.GetDataTableAsync("select count(id) TotalCount from TMember").Result.Rows[0][0];
+           // _logger.LogError(sql);
             IPagedList pageList = new PagedList<DataRow>(table.Select(), page, pageSize, total);
             return View(pageList);
         }

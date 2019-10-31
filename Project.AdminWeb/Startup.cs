@@ -95,13 +95,13 @@ namespace Project.AdminWeb
                     pattern: "{area=member}/{controller=member}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
+    name: "default2",
+    pattern: "{controller=home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
     name: "defaultWithArea",
     pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
             });//注入端点 默认路由表
-
-            //        routes.MapRoute(
-            //name: "defaultWithArea",
-            //template: "{area}/{controller=Main}/{action=Index}/{id?}");
         }
 
         private void SetDepend(string assemblyName, IServiceCollection services)

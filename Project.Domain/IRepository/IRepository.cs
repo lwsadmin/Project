@@ -13,7 +13,7 @@ namespace Project.Domain.IRepository
     /// 泛型仓储，写入CRUD通用方法
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public interface IRepository<TEntity> : IDisposable where TEntity : class
+    public interface IRepository<TEntity> where TEntity : class,new()//IRepository<TEntity> : IDisposable where TEntity : class
     {
         /// <summary>
         /// 添加

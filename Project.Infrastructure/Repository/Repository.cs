@@ -17,7 +17,7 @@ namespace Project.Infrastructure.Repository
     /// 泛型仓储，实现泛型仓储接口
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class Repository<TEntity> : IDisposable where TEntity : class, new()
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
         //private SqlContext<TEntity> _sqlContext;
         private ISqlSugarClient _db;
@@ -35,10 +35,11 @@ namespace Project.Infrastructure.Repository
         }
 
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        //public void Dispose()
+        //{
+        //    //throw new NotImplementedException();
+        //    _db.Dispose();
+        //}
 
         public async Task<int> AddAsync(TEntity obj)
         {

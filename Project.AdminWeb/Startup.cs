@@ -36,7 +36,7 @@ namespace Project.AdminWeb
         // 此方法由运行时调用。使用此方法将服务添加到容器。
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();//禁止编译视图
 
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
             // services.AddTransient(typeof(IUserAppService), typeof(UserAppService));

@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "_Table";
+    Layout = null;
+}
+@using X.PagedList
+@using System.Data
+@using X.PagedList.Mvc.Core
+@model PagedList<DataRow>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>@L("WeChat")@L("Name")</th>
+            <th>@L("FullName")</th>
+            <th>@L("PhoneNumber")</th>
+            <th>@L("CardID")</th>
+            <th>@L("Sex")</th>
+            <th>@L("Belong")@L("ChainStore")</th>
+            <th>@L("Belong")@L("Level")</th>
+            <th>@L("Integral")</th>
+            <th>@L("Balance")</th>
+            <th>@L("Register")@L("Time")</th>
+            <th>@L("Operate")</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (DataRow item in Model)
+        {
+            <tr>
+                <td>
+                    @*<img style="width:20px;" alt="image" class="img-circle" src="@item["HeadImg"]" onerror="this.src='/img/avatar-default.png'">*@
+                    <span class="title">@item["WechatName"]</span>
+                </td>
+                <td class="title">@item["FullName"]</td>
+                <td>@item["Mobile"]</td>
+                <td>@item["CardID"]</td>
+                <td>@(item["Sex"].ToString() == "0" ? L("Male") : L("Female"))</td>
+                <td>@item["StoreName"]</td>
+                <td>@item["Title"]</td>
+                <td>@item["Integral"]</td>
+                <td>@item["Balance"]</td>
+                <td>@item["RegTime"]</td>
+                <td>
+                    <a title="@L("Detail")" href="/member/cardcore/index/@item["id"]">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    @if (IsGranted("UnionMember.MemberList.Delete"))
+                    {
+                        <a style="margin-left:20px;" data-title="@L("DeleteConfirm{0}",item["FullName"])" data-ok="@L("OK")"
+                           data-cancle="@L("Cancel")" data-id="@item["id"]" onclick="Delete(this);" title="@L("Delete")" href="javascript:void(0);">
+                            <i class="fa fa-trash text-navy"></i>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="table-responsive">
+    <div id="table">
+        <br />
+        <a href="/user/exportexcel">导出报表</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" aria-label="Checkbox for following text input"></th>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>邮箱</th>
+                    <th>积分</th>
+                    <th>注册时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" aria-label="Checkbox for following text input">
+                        <td>@item["Id"]</td>
+                        <td>@item["fullName"]</td>
+                        <td>@item["Sex"]</td>
+                        <td>@item["Mobile"]</td>
+                        <td>@item["Email"]</td>
+                        <td>@item["Integral"]</td>
+                        <td>@item["RegTime"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+new PagedListRenderOptions
+ {
+MaximumPageNumbersToDisplay = 10,
+DisplayPageCountAndCurrentLocation = true,
+LinkToFirstPageFormat = "首页",
+LinkToLastPageFormat = "尾页",
+LinkToNextPageFormat = "下一页",
+PageCountAndCurrentLocationFormat = "{1}页{2}条记录",
+LinkToPreviousPageFormat = "上一页",
+UlElementClasses = new[] { "pagination col-md-8" },
+ContainerDivClasses = new[] { "row" }
+ },
+new AjaxOptions()
+{
+DataForm = "searchForm",
+HttpMethod = "GET",
+UpdateTargetId = "table"
+}
+))
+    </div>
+</div>

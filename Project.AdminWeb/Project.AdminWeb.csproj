@@ -1,10 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <!--禁止视图编译成dll-->
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <!--禁止视图编译成dll-->
+
+    <!--安装 Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation NuGet 包
+PM> Install-Package Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation -Version 3.0.0
+将项目的 Startup.ConfigureServices 方法更新为包含对 AddRazorRuntimeCompilation 的调用：
+services
+.AddControllersWithViews()
+.AddRazorRuntimeCompilation();-->
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>

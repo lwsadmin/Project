@@ -20,8 +20,11 @@ namespace Project.AdminWeb
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                   // webBuilder.UseStartup<Startup>();
-                    webBuilder.UseStartup<Startup>().UseUrls("http://*:5000");
+                    // webBuilder.UseStartup<Startup>();
+                    var configuration = new ConfigurationBuilder().SetBasePath(Environment.CurrentDirectory)
+                                    .AddJsonFile("appsettings.json")
+                                    .Build();
+                    webBuilder.UseStartup<Startup>().UseUrls(configuration["url"]);
                 });
     }
 }

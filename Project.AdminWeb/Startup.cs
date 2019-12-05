@@ -70,12 +70,12 @@ namespace Project.AdminWeb
                         if (ex != null)
                         {
                             //记录异常日志
-                            var path = $"c:\\{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
-                            System.IO.StreamWriter sw = new System.IO.StreamWriter(path, true);
-                            sw.WriteLine(ex.Error.Message);
-                            sw.WriteLine(ex.Error.StackTrace);
-                            sw.Flush();
-                            sw.Close();
+                            //var path = $"c:\\{DateTime.Now.ToString("yyyy-MM-dd")}.txt";
+                            //System.IO.StreamWriter sw = new System.IO.StreamWriter(path, true);
+                            //sw.WriteLine(ex.Error.Message);
+                            //sw.WriteLine(ex.Error.StackTrace);
+                            //sw.Flush();
+                            //sw.Close();
                         }
                         await d.Response.WriteAsync(ex?.Error?.Message ?? "an error occure");
                     });

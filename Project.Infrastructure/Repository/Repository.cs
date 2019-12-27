@@ -76,11 +76,10 @@ namespace Project.Infrastructure.Repository
             return await _db.Deleteable<TEntity>(id).ExecuteCommandHasChangeAsync();
         }
 
-        public async Task<System.Data.DataTable> GetDataTableAsync(string sql)
+        public virtual async Task<System.Data.DataTable> GetDataTableAsync(string sql)
         {
             System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
-
-
+      
             return t;
         }
     }

@@ -11,12 +11,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using Project.Common;
 namespace Services
 {
     public class UserAppService : Repository<User>, IUserAppService
     {
-        public UserAppService(IUnitOfWork uw):base(uw)
+        private ISqlSugarClient _db;
+        private readonly IUnitOfWork _unitOfWork;
+        public UserAppService(IUnitOfWork uw) : base(uw)
         {
+
+            _unitOfWork = uw;
+            _db = _unitOfWork.GetDbClient();
+            // DbContext.Init(BaseDBConfig.ConnectionString, (DbType)BaseDBConfig.DbType);
 
         }
 
@@ -42,5 +50,12 @@ namespace Services
         //    SqlContext<User> userContext = new SqlContext<User>();
         //    return userContext.Db.Queryable<User>().Where(predicate).Select(selector);
         //}
+
+        public override async Task<DataTable> GetDataTableAsync(string sql)
+        {
+            System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
+            //RedisHelper.Zero.SetStringKey<string>("myTest", DateTime.Now.Millisecond.ToString(),TimeSpan.FromMinutes(10000));
+            return t;
+        }
     }
 }

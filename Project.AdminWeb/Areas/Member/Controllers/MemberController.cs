@@ -32,7 +32,7 @@ end Sex,RegTime,Integral,Email
 FROM TMember ORDER BY id offset {(page - 1) * 10} rows FETCH next {pageSize} rows ONLY";
             var table = _userAppService.GetDataTableAsync(sql).Result;
             int total = (int)_userAppService.GetDataTableAsync("select count(id) TotalCount from TMember").Result.Rows[0][0];
-            // _logger.LogError(sql);
+           //  _logger.LogError(sql);
             IPagedList pageList = new PagedList<DataRow>(table.Select(), page, pageSize, total);
             if (Request.Headers.ContainsKey("x-requested-with"))
             {

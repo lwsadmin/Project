@@ -53,9 +53,35 @@ namespace Services
 
         public override async Task<DataTable> GetDataTableAsync(string sql)
         {
-            System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
+
             //RedisHelper.Zero.SetStringKey<string>("myTest", DateTime.Now.Millisecond.ToString(),TimeSpan.FromMinutes(10000));
-            return t;
+ 
+            try
+            {
+                _unitOfWork.BeginTran();
+
+                _db.AddQueue("update dbo.TGoodsCategory set note='22222222222222222' where Id=2");
+                _db.AddQueue("update dbo.TGoodsCategory set note='11111111' where Id=1");
+                _db.SaveQueues();
+
+                
+                System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
+                throw new Exception("");
+                //_unitOfWork.CommitTran();
+                return t;
+
+
+            }
+            catch (Exception)
+            {
+
+                _unitOfWork.RollbackTran();
+                System.Data.DataTable t = _db.SqlQueryable<System.Data.DataTable>(sql).ToDataTable();//.ToPageList(1, 2);
+                return t;
+            }
+
+
+
         }
     }
 }
